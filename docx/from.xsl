@@ -17,7 +17,8 @@
       <xd:ol>
         <xd:li><xd:b>nucma:cleanup</xd:b>: removes the word-processor artefacts (font family
           and size in <xd:i>@style</xd:i>, <xd:i>hi</xd:i> without rendition,
-          <xd:i>@xml:space</xd:i>, layout attributes of <xd:i>graphic</xd:i>) and turns the
+          <xd:i>@xml:space</xd:i>, layout attributes of <xd:i>graphic</xd:i>, anchors that
+          nothing points to, empty headings), types hyperlinks as external and turns the
           comments into XML comments;</xd:li>
         <xd:li><xd:b>nucma:header</xd:b>: moves the front matter written at the start of the
           document (entry title, short title, authors) to the TEI header;</xd:li>
@@ -198,11 +199,17 @@ NUCMA_CHAPTER=mediation ~/TEIC/Stylesheets/bin/docxtotei --profile=nucma article
   </xsl:template>
 
   <xd:doc>
-    <xd:desc>Unwraps a <xd:i>hi</xd:i> that only contains whitespace; the whitespace merges
-      with the surrounding text.</xd:desc>
+    <xd:desc>Unwraps a <xd:i>hi</xd:i> or a <xd:i>seg</xd:i> that only contains whitespace
+      (<xd:i>&lt;seg&gt;  &lt;/seg&gt;</xd:i> after a note call). It is replaced by a single
+      space, or by nothing if the neighbouring text already has one.</xd:desc>
   </xd:doc>
-  <xsl:template mode="nucma:cleanup" priority="1" match="tei:hi[not(*)][matches(., '^[\s\p{Zs}]+$')]">
-    <xsl:apply-templates mode="#current"/>
+  <xsl:template mode="nucma:cleanup" priority="1" match="(tei:hi | tei:seg)[not(*)][matches(., '^[\s\p{Zs}]+$')]">
+    <!-- a single space, of the same kind as the first one, and none if the neighbouring
+         text already has one -->
+    <xsl:if test="not(matches(preceding-sibling::node()[1][self::text()], '[\s\p{Zs}]$')
+                   or matches(following-sibling::node()[1][self::text()], '^[\s\p{Zs}]'))">
+      <xsl:value-of select="substring(., 1, 1)"/>
+    </xsl:if>
   </xsl:template>
 
   <xd:doc>
@@ -233,10 +240,44 @@ NUCMA_CHAPTER=mediation ~/TEIC/Stylesheets/bin/docxtotei --profile=nucma article
   </xsl:template>
 
   <xd:doc>
-    <xd:desc>Drops the anchors that delimit the passage of a Word comment: the passage is
-      quoted in the XML comment that replaces the note.</xd:desc>
+    <xd:desc>Drops the anchors left by Word that nothing points to: the anchors that
+      delimit the passage of a comment (quoted in the XML comment that replaces the note,
+      which is built from the source tree, so before they are dropped) and the bookmarks
+      (<xd:i>&lt;anchor xml:id="2z3fk6gdwmkd"/&gt;</xd:i>). An anchor that is the target of
+      a link (<xd:i>#id</xd:i>) is kept.</xd:desc>
   </xd:doc>
-  <xsl:template mode="nucma:cleanup" match="tei:anchor[@type = ('commentRangeStart', 'commentRangeEnd')]"/>
+  <xsl:template mode="nucma:cleanup" match="tei:anchor[nucma:is-dropped-anchor(.)]"/>
+
+  <xd:doc>
+    <xd:desc>Tells whether an anchor is dropped: nothing points to it.</xd:desc>
+    <xd:param name="anchor">An <xd:i>anchor</xd:i> element.</xd:param>
+  </xd:doc>
+  <xsl:function name="nucma:is-dropped-anchor" as="xs:boolean">
+    <xsl:param name="anchor" as="element()"/>
+    <xsl:sequence select="not($anchor/@xml:id and root($anchor)//@*[. = '#' || $anchor/@xml:id])"/>
+  </xsl:function>
+
+  <xd:doc>
+    <xd:desc>Drops the empty headings of Word: no text, and no element other than dropped
+      anchors.</xd:desc>
+  </xd:doc>
+  <xsl:template mode="nucma:cleanup"
+    match="tei:head[not(normalize-space())][every $e in * satisfies $e/self::tei:anchor[nucma:is-dropped-anchor(.)]]"/>
+
+  <xd:doc>
+    <xd:desc>Hyperlinks: <xd:i>@type="external"</xd:i> on a <xd:i>ref</xd:i> whose target is
+      a web or e-mail address (<xd:i>http(s):</xd:i>, <xd:i>ftp:</xd:i>,
+      <xd:i>mailto:</xd:i>, <xd:i>www.</xd:i>), unless it already has a type. Links to the
+      encyclopedia itself (<xd:i>nucma.ca</xd:i> and its subdomains) are left untyped: they
+      are cross-references between entries, not external links.</xd:desc>
+  </xd:doc>
+  <xsl:template mode="nucma:cleanup" match="tei:ref[not(@type)][matches(@target, '^(https?:|ftp:|mailto:|www\.)', 'i')]
+      [not(matches(@target, '^(https?://)?([a-z0-9-]+\.)*nucma\.ca([/:?#]|$)', 'i'))]">
+    <xsl:copy>
+      <xsl:attribute name="type" select="'external'"/>
+      <xsl:apply-templates select="@* | node()" mode="#current"/>
+    </xsl:copy>
+  </xsl:template>
 
   <xd:doc>
     <xd:desc>Text of the XML comment that replaces a Word comment.</xd:desc>
