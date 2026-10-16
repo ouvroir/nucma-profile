@@ -72,7 +72,7 @@ NUCMA_CHAPTER=mediation NUCMA_RESP=RC ~/TEIC/Stylesheets/bin/docxtotei --profile
   <xd:doc>
     <xd:desc>Runs the conversion of docxtotei.xsl, then the four NUCMA steps, and writes at the
       top of the file the <xd:i>xml-model</xd:i> instructions that associate it with the schema
-      (<xd:i>nucma.rng</xd:i>) and the Schematron (<xd:i>nucma-quality.sch</xd:i>), see
+      (<xd:i>nucma-text.rng</xd:i>) and the Schematron (<xd:i>nucma-quality.sch</xd:i>), see
       <xd:ref name="nucma-schemas" type="parameter"/>.</xd:desc>
   </xd:doc>
   <xsl:template match="/">
@@ -92,7 +92,7 @@ NUCMA_CHAPTER=mediation NUCMA_RESP=RC ~/TEIC/Stylesheets/bin/docxtotei --profile
     </xsl:variable>
     <!-- association with the schema and the Schematron, as in the files of the corpus -->
     <xsl:processing-instruction name="xml-model"
-      select="'href=&quot;' || $nucma-schemas || 'nucma.rng&quot; type=&quot;application/xml&quot; schematypens=&quot;http://relaxng.org/ns/structure/1.0&quot;'"/>
+      select="'href=&quot;' || $nucma-schemas || 'nucma-text.rng&quot; type=&quot;application/xml&quot; schematypens=&quot;http://relaxng.org/ns/structure/1.0&quot;'"/>
     <xsl:processing-instruction name="xml-model"
       select="'href=&quot;' || $nucma-schemas || 'nucma-quality.sch&quot; type=&quot;application/xml&quot; schematypens=&quot;http://purl.oclc.org/dsdl/schematron&quot;'"/>
     <xsl:apply-templates select="$spaced" mode="nucma:notes"/>
