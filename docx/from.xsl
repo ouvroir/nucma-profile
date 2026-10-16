@@ -121,7 +121,7 @@ NUCMA_CHAPTER=mediation NUCMA_RESP=RC ~/TEIC/Stylesheets/bin/docxtotei --profile
 
   <xd:doc>
     <xd:desc>Identifier of the person who converts the document, recorded in
-      <xd:i>revisionDesc/change/@resp</xd:i>: taken from the <xd:i>NUCMA_RESP</xd:i>
+      <xd:i>revisionDesc/change/@who</xd:i>: taken from the <xd:i>NUCMA_RESP</xd:i>
       environment variable, otherwise <xd:i>ECD</xd:i> (Emmanuel Château-Dutier), who
       usually does the encoding.</xd:desc>
   </xd:doc>
@@ -686,14 +686,14 @@ Auteur·rices :
   <xd:doc>
     <xd:desc>Revision description: the change written by docxtotei.xsl (date and
       <xd:i>unknown author</xd:i>) is replaced with a dated note in the form used by the
-      corpus: <xd:i>&lt;change when="2026-10-01" resp="#ECD"&gt;Conversion depuis Word (profil
+      corpus: <xd:i>&lt;change when="2026-10-01" who="#ECD"&gt;Conversion depuis Word (profil
       nucma)&lt;/change&gt;</xd:i>, in the language of the entry (French by default); see
       <xd:ref name="nucma-resp" type="parameter"/>.</xd:desc>
   </xd:doc>
   <xsl:template mode="nucma:header" match="tei:teiHeader/tei:revisionDesc">
     <xsl:param name="front" tunnel="yes" as="map(*)"/>
     <revisionDesc>
-      <change when="{current-date() => format-date('[Y0001]-[M01]-[D01]')}" resp="#{$nucma-resp}">
+      <change when="{current-date() => format-date('[Y0001]-[M01]-[D01]')}" who="#{$nucma-resp}">
         <xsl:value-of select="$nucma:header-model(($front?lang, 'fr')[1])?conversion"/>
       </change>
     </revisionDesc>

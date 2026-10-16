@@ -43,7 +43,7 @@ Le TEI produit est déjà nettoyé et indenté, et son en-tête est rempli (titr
 | `NUCMA_RESP` | `ECD` | personne responsable de la conversion dans `revisionDesc` |
 | `NUCMA_AUTHORS` | chemin local | URI de `meta/authors.xml` |
 
-Le fichier produit est associé au schéma (`nucma.rng`) et au Schematron (`nucma-quality.sch`) par deux instructions `xml-model` en tête de fichier ; oXygen les applique dès l’ouverture. La conversion est notée dans `revisionDesc` (`<change when="…" resp="#ECD">Conversion depuis Word (profil nucma)</change>`).
+Le fichier produit est associé au schéma (`nucma.rng`) et au Schematron (`nucma-quality.sch`) par deux instructions `xml-model` en tête de fichier ; oXygen les applique dès l’ouverture. La conversion est notée dans `revisionDesc` (`<change when="…" who="#ECD">Conversion depuis Word (profil nucma)</change>`).
 
 Viennent ensuite la structuration manuelle dans oXygen, puis la normalisation typographique (voir [typesetter](https://codeberg.org/Factoton/typesetter)).
 
