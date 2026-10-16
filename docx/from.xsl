@@ -661,7 +661,7 @@ Auteur·rices :
         <publicationStmt>
           <publisher><xsl:value-of select="$model?publisher"/></publisher>
           <date when="{year-from-date(current-date())}"><xsl:value-of select="year-from-date(current-date())"/></date>
-          <xsl:comment> @todo &lt;idno type="DOI"&gt;…&lt;/idno&gt; </xsl:comment>
+          <xsl:comment> @todo &lt;idno type="doi"&gt;…&lt;/idno&gt; </xsl:comment>
           <availability>
             <licence target="https://creativecommons.org/licenses/by/4.0/">
               <p><xsl:value-of select="$model?licence"/></p>
@@ -673,8 +673,8 @@ Auteur·rices :
             <xsl:value-of select="$model?chapter || upper-case(substring($nucma-chapter, 1, 1)) || substring($nucma-chapter, 2)"/>
           </title>
           <title xml:lang="{$front?lang}" type="sub"><xsl:value-of select="$model?series"/></title>
-          <idno type="URI">http://www.nucma.ca</idno>
-          <xsl:comment> @todo &lt;idno type="DOI"&gt;…&lt;/idno&gt; </xsl:comment>
+          <idno type="uri">http://www.nucma.ca</idno>
+          <xsl:comment> @todo &lt;idno type="doi"&gt;…&lt;/idno&gt; </xsl:comment>
         </seriesStmt>
       </xsl:when>
       <xsl:otherwise>
