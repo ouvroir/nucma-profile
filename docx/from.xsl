@@ -854,7 +854,10 @@ Auteur·rices :
           element ends with a digit or a period (<xd:i>10⍽cm</xd:i>,
           <xd:i>M.⍽Dupont</xd:i>);</xd:li>
         <xd:li>after a letter, before the element (<xd:i>et⍽&lt;q&gt;</xd:i>), unless the
-          word is a title.</xd:li>
+          word is a title;</xd:li>
+        <xd:li>alone between two elements, one of which is a phrase element
+          (<xd:i>&lt;/q&gt;⍽&lt;bibl&gt;</xd:i>), unless the first element ends with a
+          digit or a period.</xd:li>
       </xd:ul>
       No-break spaces before punctuation are kept.</xd:desc>
   </xd:doc>
@@ -864,10 +867,18 @@ Auteur·rices :
       [nucma:is-phrase(.)][not(matches(string(.), '[\p{N}.]$'))])"/>
     <xsl:variable name="before-phrase" select="exists(following-sibling::node()[1][self::*]
       [nucma:is-phrase(.)])"/>
+    <!-- no-break spaces alone between two elements (</q>⍽<bibl>) -->
+    <xsl:variable name="between-elements" select="matches(., '^' || $nucma:re-nbsp || '+$')
+      and exists(preceding-sibling::node()[1][self::*])
+      and exists(following-sibling::node()[1][self::*])"/>
     <xsl:variable name="start" select="
       if ($after-phrase) then replace(., '^' || $nucma:re-nbsp || '(\p{L})', ' $1') else string(.)"/>
     <xsl:value-of select="
-      if ($before-phrase
+      if ($between-elements
+          and ($after-phrase
+               or ($before-phrase and not(matches(string(preceding-sibling::node()[1]), '[\p{N}.]$')))))
+      then ' '
+      else if ($before-phrase
           and not(matches($start, '(^|[^\p{L}])' || $nucma:re-title || $nucma:re-nbsp || '$')))
       then replace($start, '(\p{L})' || $nucma:re-nbsp || '$', '$1 ')
       else $start"/>
