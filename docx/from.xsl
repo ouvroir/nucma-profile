@@ -18,8 +18,9 @@
         <xd:li><xd:b>nucma:cleanup</xd:b>: removes the word-processor artifacts (font family
           and size in <xd:i>@style</xd:i>, <xd:i>hi</xd:i> without rendition,
           <xd:i>@xml:space</xd:i>, layout attributes of <xd:i>graphic</xd:i>, anchors that
-          nothing points to, empty headings), types hyperlinks as external and turns the
-          comments into XML comments;</xd:li>
+          nothing points to, empty headings), renames the superscript and subscript
+          renditions to <xd:i>sup</xd:i> and <xd:i>sub</xd:i>, types hyperlinks as external
+          and turns the comments into XML comments;</xd:li>
         <xd:li><xd:b>nucma:header</xd:b>: moves the front matter written at the start of the
           document (entry title, short title, authors) to the TEI header, completes the header
           from the NUCMA model (publication, series, licence, language) and sets the language
@@ -279,6 +280,16 @@ NUCMA_CHAPTER=mediation NUCMA_RESP=RC ~/TEIC/Stylesheets/bin/docxtotei --profile
     <xsl:if test="$style">
       <xsl:attribute name="style" select="$style"/>
     </xsl:if>
+  </xsl:template>
+
+  <xd:doc>
+    <xd:desc>Renames the superscript and subscript renditions written by the TEI Stylesheets
+      (<xd:i>superscript</xd:i>, <xd:i>subscript</xd:i>) to the values used by the project and
+      by Commons Publishing (<xd:i>sup</xd:i>, <xd:i>sub</xd:i>); the other tokens are
+      kept.</xd:desc>
+  </xd:doc>
+  <xsl:template mode="nucma:cleanup" match="(tei:hi | tei:seg)/@rend[tokenize(.) = ('superscript', 'subscript')]">
+    <xsl:attribute name="rend" select="tokenize(.) ! (if (. = 'superscript') then 'sup' else if (. = 'subscript') then 'sub' else .)"/>
   </xsl:template>
 
   <xd:doc>
