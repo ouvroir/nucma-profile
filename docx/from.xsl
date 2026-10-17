@@ -149,7 +149,7 @@ NUCMA_CHAPTER=mediation NUCMA_RESP=RC ~/TEIC/Stylesheets/bin/docxtotei --profile
   </xd:doc>
   <xsl:param name="nucma-authors" as="xs:string"
     select="(environment-variable('NUCMA_AUTHORS')[normalize-space()],
-             'file:///Users/emmanuelchateau/ouvroir/nucma-textes/meta/authors.xml')[1]"/>
+             'file:///Users/emmanuelchateau/ouvroir/nucma-texts/meta/authors.xml')[1]"/>
 
   <xd:doc>
     <xd:desc>The list of the authors, or nothing if it cannot be read (the authors are then

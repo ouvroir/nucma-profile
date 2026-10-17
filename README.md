@@ -2,7 +2,7 @@
 
 Profil `nucma` des [TEI Stylesheets](https://github.com/teic/stylesheets) : conversion en TEI des entrées de l’Encyclopédie NUCMA rédigées dans Word, avec en-tête rempli à partir du document, nettoyage des artefacts de Word et sortie indentée.
 
-La normalisation typographique et le nettoyage des fichiers déjà importés se trouvent dans le dépôt [typesetter](https://codeberg.org/Factoton/typesetter) ; les textes et `meta/authors.xml` dans `nucma-textes`.
+La normalisation typographique et le nettoyage des fichiers déjà importés se trouvent dans le dépôt [typesetter](https://codeberg.org/Factoton/typesetter) ; les textes et `meta/authors.xml` dans `nucma-texts`.
 
 | Fichier | Rôle |
 |---|---|
@@ -25,7 +25,7 @@ La normalisation typographique et le nettoyage des fichiers déjà importés se 
 - Le profil lit `meta/authors.xml` du dépôt des textes au chemin indiqué par le paramètre `nucma-authors` de `from.xsl` (chemin sur le poste d’Emmanuel Château-Dutier). Sur un autre poste, modifier ce chemin ou le donner par une variable d’environnement :
 
   ```sh
-  NUCMA_AUTHORS=file:///chemin/vers/nucma-textes/meta/authors.xml docxtotei --profile=nucma Entree.docx entree.xml
+  NUCMA_AUTHORS=file:///chemin/vers/nucma-texts/meta/authors.xml docxtotei --profile=nucma Entree.docx entree.xml
   ```
 
 ## Importer un texte
